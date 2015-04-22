@@ -39,6 +39,7 @@
 #include <audio_effects/effect_aec.h>
 
 #include "audio_hardware.h"
+#include "config_sgtl5000.h"
 #include "config_wm8962.h"
 #include "config_wm8958.h"
 #include "config_hdmi.h"
@@ -91,11 +92,11 @@
 #define PRODUCT_NAME_PROPERTY   "ro.product.name"
 #define PRODUCT_DEVICE_IMX      "imx"
 #define PRODUCT_DEVICE_AUTO     "sabreauto"
-#define SUPPORT_CARD_NUM        7
 
 /*"null_card" must be in the end of this array*/
-struct audio_card *audio_card_list[SUPPORT_CARD_NUM] = {
+struct audio_card *audio_card_list[] = {
     &wm8958_card,
+    &sgtl5000_card,
     &wm8962_card,
     &hdmi_card,
     &usbaudio_card,
@@ -103,6 +104,7 @@ struct audio_card *audio_card_list[SUPPORT_CARD_NUM] = {
     &cs42888_card,
     &null_card,
 };
+#define SUPPORT_CARD_NUM        (sizeof(audio_card_list)/sizeof(audio_card_list[0]))
 
 struct pcm_config pcm_config_mm_out = {
     .channels = 2,
@@ -3204,7 +3206,7 @@ static int scan_available_device(struct imx_audio_device *adev, bool rescanusb)
     int left_out_devices = SUPPORTED_DEVICE_OUT_MODULE;
     int left_in_devices = SUPPORTED_DEVICE_IN_MODULE;
     int rate, channels, format;
-    /* open the mixer for main sound card, main sound cara is like sgtl5000, wm8958, cs428888*/
+    /* open the mixer for main sound card, main sound card is like sgtl5000, wm8958, cs428888*/
     /* note: some platform do not have main sound card, only have auxiliary card.*/
     /* max num of supported card is 2 */
     k = adev->audio_card_num;
@@ -3218,10 +3220,11 @@ static int scan_available_device(struct imx_audio_device *adev, bool rescanusb)
         imx_control = control_open(i);
         if(!imx_control)
             break;
+
         ALOGW("card %d, id %s ,driver %s, name %s", i, control_card_info_get_id(imx_control),
                                                       control_card_info_get_driver(imx_control),
                                                       control_card_info_get_name(imx_control));
-        for(j = 0; j < SUPPORT_CARD_NUM; j++) {
+        for(j = 0; j < (int)SUPPORT_CARD_NUM; j++) {
             if(strstr(control_card_info_get_driver(imx_control), audio_card_list[j]->driver_name) != NULL){
                 // check if the device have been scaned before
                 scanned = false;
