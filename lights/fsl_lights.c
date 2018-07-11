@@ -71,15 +71,8 @@ static int set_light_backlight(struct light_device_t* dev,
                  (29*(color&0x00ff))) >> 8;
     ALOGV("set_light, get brightness=%d", brightness);
 
-    file = fopen(max_path, "r");
-    if (!file) {
-        ALOGE("can not open file %s\n", max_path);
-        return result;
-    }
-    fread(&max_brightness, 1, 3, file);
-    fclose(file);
 
-    max_brightness = atoi((char *) &max_brightness);
+    max_brightness = 8;
     /* any brightness greater than 0, should have at least backlight on */
     if (max_brightness < MAX_BRIGHTNESS)
         brightness = max_brightness *(brightness + MAX_BRIGHTNESS / max_brightness - 1) / MAX_BRIGHTNESS;

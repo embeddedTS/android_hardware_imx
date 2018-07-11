@@ -28,6 +28,11 @@ LOCAL_C_INCLUDES += \
 	system/media/audio_effects/include
 LOCAL_SHARED_LIBRARIES := liblog libcutils libtinyalsa libaudioutils libdl
 LOCAL_MODULE_TAGS := optional
+
+ifeq ($(BOARD_HAS_SGTL5000),true)
+	LOCAL_CFLAGS += -DBOARD_HAS_SGTL5000
+endif
+
 include $(BUILD_SHARED_LIBRARY)
 
 endif

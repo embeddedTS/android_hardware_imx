@@ -46,6 +46,7 @@
 #include "config_spdif.h"
 #include "config_cs42888.h"
 #include "config_wm8960.h"
+#include "config_sgtl5000.h"
 #include "config_sii902x.h"
 
 #ifdef BRILLO
@@ -115,7 +116,7 @@
 #define PRODUCT_NAME_PROPERTY   "ro.product.name"
 #define PRODUCT_DEVICE_IMX      "imx"
 #define PRODUCT_DEVICE_AUTO     "sabreauto"
-#define SUPPORT_CARD_NUM        8
+#define SUPPORT_CARD_NUM        9
 
 /*"null_card" must be in the end of this array*/
 struct audio_card *audio_card_list[SUPPORT_CARD_NUM] = {
@@ -127,6 +128,7 @@ struct audio_card *audio_card_list[SUPPORT_CARD_NUM] = {
     &cs42888_card,
     &wm8960_card,
     &sii902x_card,
+    &sgtl5000_card,
     &null_card,
 };
 
@@ -3433,5 +3435,3 @@ struct audio_module HAL_MODULE_INFO_SYM = {
         .methods = &hal_module_methods,
     },
 };
-
-
